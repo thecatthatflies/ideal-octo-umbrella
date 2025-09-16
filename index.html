@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PYRIVAL — Ultra Static Python IDE</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0b0f1a">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/editor/editor.main.css">
+</head>
+<body>
+  <div id="splash">
+    <div class="logo">🐍</div>
+    <h1>PYRIVAL</h1>
+    <p>Ultra Static Python IDE — no backend.</p>
+    <div class="bar"><span></span></div>
+    <div id="splash-msg">Loading…</div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand"><span class="snake">🐍</span> PYRIVAL</div>
+    <div class="actions">
+      <button id="runBtn" title="Run (Ctrl/Cmd+Enter)"><i class="fa-solid fa-play"></i> Run</button>
+      <button id="stopBtn" title="Stop"><i class="fa-solid fa-stop"></i></button>
+      <button id="newFileBtn" title="New file (N)"><i class="fa-regular fa-file"></i></button>
+      <button id="saveBtn" title="Save (Ctrl/Cmd+S)"><i class="fa-regular fa-floppy-disk"></i></button>
+      <button id="exportBtn" title="Export Project"><i class="fa-solid fa-box-archive"></i></button>
+      <button id="importBtn" title="Import Files"><i class="fa-solid fa-file-import"></i></button>
+      <button id="commandBtn" title="Command Palette (Ctrl/Cmd+K)"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button id="themeBtn" title="Theme"><i class="fa-regular fa-moon"></i></button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="sidebar">
+      <div class="section-title">FILES</div>
+      <div id="fileTree"></div>
+      <div class="section-title">HISTORY</div>
+      <div id="timeline"></div>
+    </aside>
+    <section class="editor-wrap">
+      <div id="tabs"></div>
+      <div id="editor"></div>
+      <div id="panel">
+        <div class="panel-tabs">
+          <button data-tab="output" class="active">Output</button>
+          <button data-tab="console">Console</button>
+          <button data-tab="vars">Vars</button>
+          <button data-tab="tests">Tests</button>
+        </div>
+        <div class="panel-body">
+          <pre id="output" class="panel-pane active"></pre>
+          <div id="repl" class="panel-pane">
+            <div id="repl-history"></div>
+            <input id="repl-input" placeholder=">>> type Python and hit Enter">
+          </div>
+          <div id="vars" class="panel-pane"><table id="vars-table"></table></div>
+          <div id="tests" class="panel-pane"><div id="tests-body"></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <input type="file" id="fileInput" multiple style="display:none" />
+
+  <script>
+  // Monaco worker shim
+  window.MonacoEnvironment = {
+    getWorkerUrl: function (moduleId, label) {
+      const code = `
+        self.MonacoEnvironment = { baseUrl: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/' };
+        importScripts('https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/base/worker/workerMain.js');
+      `;
+      return URL.createObjectURL(new Blob([code], { type: 'text/javascript' }));
+    }
+  };
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/pyodide.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
